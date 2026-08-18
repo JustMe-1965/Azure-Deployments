@@ -1,2 +1,3 @@
-# Azure-Deployments
-#Michael DeFrancesco 08/15/2026
+# Azure-Deployments By #Michael DeFrancesco
+
+#Automating Azure Deployments with GitHub Actions and Terraform (AVM)
