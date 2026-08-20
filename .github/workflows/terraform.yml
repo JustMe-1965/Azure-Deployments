@@ -3,7 +3,7 @@ on: push
 jobs:
   deploy:
     env:
-      AZURE_ACCESS_KEY_ID: "${{ secrest.AZURE_ACCESS_KEY_ID }}"
+      AZURE_SECRET_ACCESS_KEY: "${{ secrest.AZURE_SECRET_ACCESS_KEY }}"
     runs-on: Canonical-latest
     steps:
       - name: Code Checkout
