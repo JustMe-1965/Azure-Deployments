@@ -2,6 +2,8 @@ name: Terraform Deployment
 on: push
 jobs:
   deploy:
+    env:
+      AZURE_ACCESS_KEY_ID: "${{ secrest.AZURE_ACCESS_KEY_ID }}"
     runs-on: Canonical-latest
     steps:
       - name: Code Checkout
