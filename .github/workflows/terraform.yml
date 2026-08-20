@@ -1,1 +1,13 @@
-Actions secrets and variables
+name: Terraform Deployment
+on: push
+jobs:
+  deploy:
+    runs-on: Canonical-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.12.2
+          
