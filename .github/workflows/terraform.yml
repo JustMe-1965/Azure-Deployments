@@ -1,15 +1,55 @@
 name: Terraform Deployment
-on: push
+
+permissions:
+  id-token: write
+  contents: read
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  deploy:
-    env:
-      AZURE_SECRET_ACCESS_KEY: "${{ secrest.AZURE_SECRET_ACCESS_KEY }}"
-    runs-on: Canonical-latest
+  terraform:
+    runs-on: ubuntu-latest
+
     steps:
-      - name: Code Checkout
-        uses: actions/checkout@v4
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v3
-        with:
-          terraform_version: 1.12.2
-          
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Azure Login (OIDC)
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+    - name: Get VM Admin Password from Key Vault
+      uses: azure/cli@v2
+      with:
+        inlineScript: |
+          VM_PASS=$(az keyvault secret show \
+            --vault-name akv-terraform-prod \
+            --name vmadminpassword \
+            --query value -o tsv)
+          echo "VM_ADMIN_PASSWORD=$VM_PASS" >> $GITHUB_ENV
+
+    - name: Terraform Init
+      run: |
+        terraform init \
+          -backend-config="storage_account_name=${{ secrets.AZURE_STORAGE_ACCOUNT_NAME }}" \
+          -backend-config="container_name=tfstate" \
+          -backend-config="key=terraform.tfstate" \
+          -backend-config="access_key=${{ secrets.AZURE_STORAGE_KEY }}"
+
+    - name: Terraform Plan
+      run: |
+        terraform plan \
+          -var "admin_password=${VM_ADMIN_PASSWORD}"
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main'
+      run: |
+        terraform apply -auto-approve \
+          -var "admin_password=${VM_ADMIN_PASSWORD}"
+
