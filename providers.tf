@@ -14,8 +14,8 @@ terraform {
   }
 }
 
-#provider "azurerm" {
- # features {}
- # use_msi      = true
- # msi_endpoint = "http://169.254.169.254/metadata/identity/oauth2/token"
-#}
+provider "azurerm" {
+  features {}
+
+  use_oidc = true
+}
