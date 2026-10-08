@@ -36,20 +36,7 @@ jobs:
         with:
           terraform_version: 1.12.2
 
-      - name: Export ARM Variables
-        run: |
-          echo "ARM_CLIENT_ID=${{ secrets.AZURE_CLIENT_ID }}" >> $GITHUB_ENV
-          echo "ARM_TENANT_ID=${{ secrets.AZURE_TENANT_ID }}" >> $GITHUB_ENV
-          echo "ARM_SUBSCRIPTION_ID=${{ secrets.AZURE_SUBSCRIPTION_ID }}" >> $GITHUB_ENV
-          echo "ARM_USE_OIDC=true" >> $GITHUB_ENV
-
-          - name: Validate backend settings
-            run: |
-               echo "RG set? ${{ secrets.TFSTATE_RESOURCE_GROUP != '' }}"
-               echo "Storage set? ${{ secrets.TFSTATE_STORAGE_ACCOUNT != '' }}"
-               echo "Container set? ${{ secrets.TFSTATE_CONTAINER != '' }}"
-               echo "Key set? ${{ secrets.TFSTATE_KEY != '' }}"
-
+      
       - name: Terraform Init
         run: terraform init 
 
