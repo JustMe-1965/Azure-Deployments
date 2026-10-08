@@ -30,8 +30,7 @@ jobs:
       - name: Show Accounts
         run: |
           az account list -o table
-          az ad signedin-user show || true*
-          
+          az ad signedin-user show || true      
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
