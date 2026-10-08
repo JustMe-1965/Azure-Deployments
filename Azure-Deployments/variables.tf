@@ -33,3 +33,32 @@ variable "subnet_address_prefixes" {
   type        = list(string)
   default     = ["10.0.0.0/24"]
 }
+
+variable "vm_name" {
+  description = "The name of the Windows virtual machine"
+  type        = string
+  default     = "myWindowsVM"
+
+  validation {
+    condition     = length(var.vm_name) <= 15
+    error_message = "vm_name must be 15 characters or fewer because it is also used as the Windows computer name."
+  }
+}
+
+variable "vm_size" {
+  description = "The Azure size of the Windows virtual machine"
+  type        = string
+  default     = "Standard_D2s_v5"
+}
+
+variable "vm_admin_username" {
+  description = "The administrator username for the Windows virtual machine"
+  type        = string
+  default     = "azureadmin"
+}
+
+variable "vm_admin_password" {
+  description = "The administrator password for the Windows virtual machine; it must meet Azure's Windows password requirements"
+  type        = string
+  sensitive   = true
+}
