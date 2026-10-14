@@ -21,3 +21,34 @@ module "avm-res-network-virtualnetwork" {
     }
   }
 }
+
+module "network_interface" {
+  source = "./modules/network-interface"
+
+  name                = "${var.vm_name}-nic"
+  location            = var.location
+  resource_group_name = module.avm-res-resources-resourcegroup.name
+  subnet_id           = module.avm-res-network-virtualnetwork.subnets["subnet1"].resource_id
+}
+
+module "linux_virtual_machine" {
+  source = "./modules/linux-virtual-machine"
+
+  name                 = var.vm_name
+  location             = var.location
+  resource_group_name  = module.avm-res-resources-resourcegroup.name
+  size                 = var.vm_size
+  network_interface_id = module.network_interface.id
+  admin_username       = var.vm_admin_username
+  admin_password       = var.vm_admin_password
+}
+
+moved {
+  from = azurerm_network_interface.vm
+  to   = module.network_interface.azurerm_network_interface.this
+}
+
+moved {
+  from = azurerm_linux_virtual_machine.vm
+  to   = module.linux_virtual_machine.azurerm_linux_virtual_machine.this
+}
