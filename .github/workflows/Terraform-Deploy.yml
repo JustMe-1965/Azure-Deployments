@@ -3,7 +3,7 @@ name: Terraform Deploy
 on:
   push:
     branches:
-      - Azure-Deployments-Add-VMs
+      - main
 
 permissions:
   id-token: write
