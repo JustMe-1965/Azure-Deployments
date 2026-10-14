@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - main
-      - Azure-Deployments-Add-VMs
-
+      
 permissions:
   id-token: write
   contents: read
